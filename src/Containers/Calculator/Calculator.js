@@ -1,71 +1,47 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 
 import Button from "../../Components/Button/Button";
 import Display from "../../Components/Display/Display";
 
-class Calculator extends Component {
-  constructor(props) {
-    super(props);
+const Calculator = () => {
+  const [result, setResult] = useState("");
 
-    this.state = {
-      result: ""
-    };
-  }
-
-  handleButtonClick = e => {
+  const handleButtonClick = e => {
     e.preventDefault();
     const button = e.target;
-    const lastResultSymbol = this.state.result.length
-      ? this.state.result[this.state.result.length - 1]
-      : 0;
+    const lastResultSymbol = result.length ? result[result.length - 1] : 0;
 
     switch (button.dataset.name) {
       case "reset": //click on btn "C"
-        this.setState({
-          result: "0"
-        });
+        setResult("0");
         break;
 
       case "calculate": //click on btn "="
-        if (
-          this.state.result.length > 1 &&
-          !isNaN(parseFloat(lastResultSymbol))
-        ) {
-          this.calculate();
+        if (result.length > 1 && !isNaN(parseFloat(lastResultSymbol))) {
+          calculate();
         }
         break;
 
       case "operator": //click on btn "+, -, *, /"
         if (!isNaN(parseFloat(lastResultSymbol))) {
           // can't start with an operator, except "-"
-          if (
-            this.state.result !== "0" &&
-            this.state.result.toString().length
-          ) {
-            this.setState(prevState => ({
-              result: prevState.result + button.innerText
-            }));
+          if (result !== "0" && result.toString().length) {
+            setResult(result + button.innerText);
           } else if (button.innerText === "-") {
-            this.setState({
-              result: button.innerText
-            });
+            setResult(button.innerText);
           }
         }
         break;
 
       default:
-        this.state.result !== "0" // checking case - after reset
-          ? this.setState(prevState => ({
-              result: prevState.result + button.innerText
-            }))
-          : this.setState({
-              result: button.innerText
-            });
+        result !== "0" // checking case - after reset
+          ? setResult(result + button.innerText)
+          : setResult(button.innerText);
     }
   };
 
-  calculate = () => {
-    const inputArr = this.state.result.split("");
+  const calculate = () => {
+    const inputArr = result.split("");
     let newArray = [];
 
     // Parse calculte string
@@ -104,211 +80,209 @@ class Calculator extends Component {
     });
 
     // Calculate Add and Divide
-    let result = parseFloat(arrMultiplySubtract[0]);
+    let calcResult = parseFloat(arrMultiplySubtract[0]);
     for (let i = 0; i < arrMultiplySubtract.length; i++) {
       let num = parseFloat(arrMultiplySubtract[i + 1]);
 
       switch (arrMultiplySubtract[i]) {
         case "+":
-          result = result + num;
+          calcResult = calcResult + num;
           break;
         case "-":
-          result = result - num;
+          calcResult = calcResult - num;
           break;
         default:
           break;
       }
     }
 
-    this.setState({ result });
+    setResult(calcResult);
   };
 
-  render() {
-    return (
-      <div className="container pt-3 pb-3 d-flex justify-content-md-center">
-        <div className="col-md-6 col-lg-4 bg-light rounded">
-          <div className="col pt-3 pb-3">
-            <div className="row mb-3">
-              <div className="col-12 pt-1 pb-1">
-                <Display value={this.state.result.toString()} />
+  return (
+    <div className="container pt-3 pb-3 d-flex justify-content-md-center">
+      <div className="col-md-6 col-lg-4 bg-light rounded">
+        <div className="col pt-3 pb-3">
+          <div className="row mb-3">
+            <div className="col-12 pt-1 pb-1">
+              <Display value={result.toString()} />
+            </div>
+          </div>
+
+          <div className="row">
+            <div className="col-8">
+              <div className="row mb-3">
+                <div className="col pr-0">
+                  <Button
+                    type="number"
+                    customClass="btn-info"
+                    handleClick={handleButtonClick}
+                  >
+                    7
+                  </Button>
+                </div>
+                <div className="col pr-0">
+                  <Button
+                    type="number"
+                    customClass="btn-info"
+                    handleClick={handleButtonClick}
+                  >
+                    8
+                  </Button>
+                </div>
+                <div className="col pr-0">
+                  <Button
+                    type="number"
+                    customClass="btn-info"
+                    handleClick={handleButtonClick}
+                  >
+                    9
+                  </Button>
+                </div>
+              </div>
+
+              <div className="row mb-3">
+                <div className="col pr-0">
+                  <Button
+                    type="number"
+                    customClass="btn-info"
+                    handleClick={handleButtonClick}
+                  >
+                    4
+                  </Button>
+                </div>
+                <div className="col pr-0">
+                  <Button
+                    type="number"
+                    customClass="btn-info"
+                    handleClick={handleButtonClick}
+                  >
+                    5
+                  </Button>
+                </div>
+                <div className="col pr-0">
+                  <Button
+                    type="number"
+                    customClass="btn-info"
+                    handleClick={handleButtonClick}
+                  >
+                    6
+                  </Button>
+                </div>
+              </div>
+              <div className="row mb-3">
+                <div className="col pr-0">
+                  <Button
+                    type="number"
+                    customClass="btn-info"
+                    handleClick={handleButtonClick}
+                  >
+                    1
+                  </Button>
+                </div>
+                <div className="col pr-0">
+                  <Button
+                    type="number"
+                    customClass="btn-info"
+                    handleClick={handleButtonClick}
+                  >
+                    2
+                  </Button>
+                </div>
+                <div className="col pr-0">
+                  <Button
+                    type="number"
+                    customClass="btn-info"
+                    handleClick={handleButtonClick}
+                  >
+                    3
+                  </Button>
+                </div>
+              </div>
+              <div className="row mb-3">
+                <div className="col pr-0">
+                  <Button
+                    type="reset"
+                    customClass="btn-danger"
+                    handleClick={handleButtonClick}
+                  >
+                    C
+                  </Button>
+                </div>
+                <div className="col pr-0">
+                  <Button
+                    type="number"
+                    customClass="btn-info"
+                    handleClick={handleButtonClick}
+                  >
+                    0
+                  </Button>
+                </div>
+                <div className="col pr-0">
+                  <Button
+                    type="calculate"
+                    customClass="btn-danger"
+                    handleClick={handleButtonClick}
+                  >
+                    =
+                  </Button>
+                </div>
               </div>
             </div>
-
-            <div className="row">
-              <div className="col-8">
-                <div className="row mb-3">
-                  <div className="col pr-0">
-                    <Button
-                      type="number"
-                      customClass="btn-info"
-                      handleClick={this.handleButtonClick}
-                    >
-                      7
-                    </Button>
-                  </div>
-                  <div className="col pr-0">
-                    <Button
-                      type="number"
-                      customClass="btn-info"
-                      handleClick={this.handleButtonClick}
-                    >
-                      8
-                    </Button>
-                  </div>
-                  <div className="col pr-0">
-                    <Button
-                      type="number"
-                      customClass="btn-info"
-                      handleClick={this.handleButtonClick}
-                    >
-                      9
-                    </Button>
-                  </div>
-                </div>
-
-                <div className="row mb-3">
-                  <div className="col pr-0">
-                    <Button
-                      type="number"
-                      customClass="btn-info"
-                      handleClick={this.handleButtonClick}
-                    >
-                      4
-                    </Button>
-                  </div>
-                  <div className="col pr-0">
-                    <Button
-                      type="number"
-                      customClass="btn-info"
-                      handleClick={this.handleButtonClick}
-                    >
-                      5
-                    </Button>
-                  </div>
-                  <div className="col pr-0">
-                    <Button
-                      type="number"
-                      customClass="btn-info"
-                      handleClick={this.handleButtonClick}
-                    >
-                      6
-                    </Button>
-                  </div>
-                </div>
-                <div className="row mb-3">
-                  <div className="col pr-0">
-                    <Button
-                      type="number"
-                      customClass="btn-info"
-                      handleClick={this.handleButtonClick}
-                    >
-                      1
-                    </Button>
-                  </div>
-                  <div className="col pr-0">
-                    <Button
-                      type="number"
-                      customClass="btn-info"
-                      handleClick={this.handleButtonClick}
-                    >
-                      2
-                    </Button>
-                  </div>
-                  <div className="col pr-0">
-                    <Button
-                      type="number"
-                      customClass="btn-info"
-                      handleClick={this.handleButtonClick}
-                    >
-                      3
-                    </Button>
-                  </div>
-                </div>
-                <div className="row mb-3">
-                  <div className="col pr-0">
-                    <Button
-                      type="reset"
-                      customClass="btn-danger"
-                      handleClick={this.handleButtonClick}
-                    >
-                      C
-                    </Button>
-                  </div>
-                  <div className="col pr-0">
-                    <Button
-                      type="number"
-                      customClass="btn-info"
-                      handleClick={this.handleButtonClick}
-                    >
-                      0
-                    </Button>
-                  </div>
-                  <div className="col pr-0">
-                    <Button
-                      type="calculate"
-                      customClass="btn-danger"
-                      handleClick={this.handleButtonClick}
-                    >
-                      =
-                    </Button>
-                  </div>
+            <div className="col-4">
+              <div className="row mb-3">
+                <div className="col">
+                  <Button
+                    type="operator"
+                    customClass="btn-secondary"
+                    handleClick={handleButtonClick}
+                  >
+                    +
+                  </Button>
                 </div>
               </div>
-              <div className="col-4">
-                <div className="row mb-3">
-                  <div className="col">
-                    <Button
-                      type="operator"
-                      customClass="btn-secondary"
-                      handleClick={this.handleButtonClick}
-                    >
-                      +
-                    </Button>
-                  </div>
-                </div>
 
-                <div className="row mb-3">
-                  <div className="col">
-                    <Button
-                      type="operator"
-                      customClass="btn-secondary"
-                      handleClick={this.handleButtonClick}
-                    >
-                      -
-                    </Button>
-                  </div>
+              <div className="row mb-3">
+                <div className="col">
+                  <Button
+                    type="operator"
+                    customClass="btn-secondary"
+                    handleClick={handleButtonClick}
+                  >
+                    -
+                  </Button>
                 </div>
+              </div>
 
-                <div className="row mb-3">
-                  <div className="col">
-                    <Button
-                      type="operator"
-                      customClass="btn-secondary"
-                      handleClick={this.handleButtonClick}
-                    >
-                      *
-                    </Button>
-                  </div>
+              <div className="row mb-3">
+                <div className="col">
+                  <Button
+                    type="operator"
+                    customClass="btn-secondary"
+                    handleClick={handleButtonClick}
+                  >
+                    *
+                  </Button>
                 </div>
+              </div>
 
-                <div className="row">
-                  <div className="col">
-                    <Button
-                      type="operator"
-                      customClass="btn-secondary"
-                      handleClick={this.handleButtonClick}
-                    >
-                      /
-                    </Button>
-                  </div>
+              <div className="row">
+                <div className="col">
+                  <Button
+                    type="operator"
+                    customClass="btn-secondary"
+                    handleClick={handleButtonClick}
+                  >
+                    /
+                  </Button>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
 
 export default Calculator;
